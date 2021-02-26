@@ -14,6 +14,10 @@ import "../../assets/icon-80.png";
 import { TextlintKernel } from "@textlint/kernel";
 import { moduleInterop } from "@textlint/module-interop";
 
+window.kuromojin = {
+  dicPath: "/msword-textlint/dict"
+};
+
 const textLint = new TextlintKernel()
 
 const lintOptions = {

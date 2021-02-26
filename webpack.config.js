@@ -70,6 +70,10 @@ module.exports = async (env, options) => {
       }),
       new CopyWebpackPlugin({
         patterns: [
+          {
+            to: "dict/[name].[ext]",
+            from: "./node_modules/kuromoji/dict/*"
+          },
         {
           to: "taskpane.css",
           from: "./src/taskpane/taskpane.css"
