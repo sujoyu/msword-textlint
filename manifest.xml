@@ -10,7 +10,7 @@
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
   <SupportUrl DefaultValue="https://www.contoso.com/help"/>
   <AppDomains>
-    <AppDomain>https://sujoyu.github.io/msword-textlint</AppDomain>
+    <AppDomain>https://sujoyu.github.io</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Document"/>
