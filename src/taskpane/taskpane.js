@@ -69,6 +69,18 @@ const lintOptions = {
       ruleId: "no-double-negative-ja",
       rule: moduleInterop(require("textlint-rule-no-double-negative-ja")),
       options: {}
+    },
+    {
+      ruleId: "ja-hiragana-keishikimeishi",
+      rule: moduleInterop(require("textlint-rule-ja-hiragana-keishikimeishi")),
+      options: {}
+    },
+    {
+      ruleId: "ja-hiragana-fukushi",
+      rule: moduleInterop(require("textlint-rule-ja-hiragana-fukushi")),
+      options: {
+        rulePath: devMode ? "/dict/fukushi.yml" : "/msword-textlint/dict/fukushi.yml"
+      }
     }
   ]
 };

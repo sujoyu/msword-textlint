@@ -84,6 +84,10 @@ module.exports = async (env, options) => {
             from: "./node_modules/sudachi-synonyms-dictionary/sudachi-synonyms-dictionary.json"
           },
           {
+            to: "dict/[name].[ext]",
+            from: "./node_modules/textlint-rule-ja-hiragana-fukushi/dict/fukushi.yml"
+          },
+          {
             to: "taskpane.css",
             from: "./src/taskpane/taskpane.css"
           },
@@ -107,7 +111,8 @@ module.exports = async (env, options) => {
       }),
       new webpack.DefinePlugin({
         devMode: dev
-      })
+      }),
+      new webpack.IgnorePlugin(/^(fs)$/)
     ],
     devServer: {
       // writeToDisk: true,
