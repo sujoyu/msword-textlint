@@ -2,13 +2,15 @@ const devCerts = require("office-addin-dev-certs");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const MomentLocalesPlugin = require("moment-locales-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const fs = require("fs");
+const path = require("path");
 const webpack = require("webpack");
+const WebpackMildCompile = require("webpack-mild-compile").Plugin;
 
-const urlDev="https://localhost:3000/";
-const urlProd="https://sujoyu.github.io/msword-textlint/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
+const urlDev = "https://localhost:3000/";
+const urlProd = "https://sujoyu.github.io/msword-textlint/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
 
 module.exports = async (env, options) => {
   const dev = options.mode === "development";
@@ -30,16 +32,19 @@ module.exports = async (env, options) => {
           test: /\.js$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader", 
+            loader: "babel-loader",
             options: {
               presets: [
-                ["@babel/preset-env", {
-                  useBuiltIns: 'entry',
-                  corejs: 3,
-                  targets: {
-                    ie: '11',
-                  },
-                }]
+                [
+                  "@babel/preset-env",
+                  {
+                    useBuiltIns: "entry",
+                    corejs: 3,
+                    targets: {
+                      ie: "11"
+                    }
+                  }
+                ]
               ]
             }
           }
@@ -53,14 +58,14 @@ module.exports = async (env, options) => {
           test: /\.(png|jpg|jpeg|gif)$/,
           loader: "file-loader",
           options: {
-            name: '[path][name].[ext]',          
+            name: "[path][name].[ext]"
           }
         }
       ]
     },
     plugins: [
       new MomentLocalesPlugin({
-        localesToKeep: ['en', 'ja', 'es', 'fr', 'zh-cn', 'zh-hk', 'zh-tw',], // https://github.com/azu/textlint-rule-date-weekday-mismatch/blob/master/src/textlint-rule-date-weekday-mismatch.js#L10
+        localesToKeep: ["en", "ja", "es", "fr", "zh-cn", "zh-hk", "zh-tw"] // https://github.com/azu/textlint-rule-date-weekday-mismatch/blob/master/src/textlint-rule-date-weekday-mismatch.js#L10
       }),
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
@@ -74,38 +79,50 @@ module.exports = async (env, options) => {
             to: "dict/[name].[ext]",
             from: "./node_modules/kuromoji/dict/*"
           },
-        {
-          to: "taskpane.css",
-          from: "./src/taskpane/taskpane.css"
-        },
-        {
-          to: "[name]." + buildType + ".[ext]",
-          from: "manifest*.xml",
-          transform(content) {
-            if (dev) {
-              return content;
-            } else {
-              return content.toString().replace(new RegExp(urlDev, "g"), urlProd);
+          {
+            to: "dict/[name].[ext]",
+            from: "./node_modules/sudachi-synonyms-dictionary/sudachi-synonyms-dictionary.json"
+          },
+          {
+            to: "taskpane.css",
+            from: "./src/taskpane/taskpane.css"
+          },
+          {
+            to: "[name]." + buildType + ".[ext]",
+            from: "manifest*.xml",
+            transform(content) {
+              if (dev) {
+                return content;
+              } else {
+                return content.toString().replace(new RegExp(urlDev, "g"), urlProd);
+              }
             }
           }
-        }
-      ]}),
+        ]
+      }),
       new HtmlWebpackPlugin({
         filename: "commands.html",
         template: "./src/commands/commands.html",
         chunks: ["polyfill", "commands"]
+      }),
+      new webpack.DefinePlugin({
+        devMode: dev
       })
     ],
     devServer: {
+      // writeToDisk: true,
+      // contentBase: path.join(__dirname, 'dist'),
+      // watchContentBase: true,
       headers: {
         "Access-Control-Allow-Origin": "*"
-      },      
-      https: (options.https !== undefined) ? options.https : await devCerts.getHttpsServerOptions(),
+      },
+      https: options.https !== undefined ? options.https : await devCerts.getHttpsServerOptions(),
       port: process.env.npm_package_config_dev_server_port || 3000
     },
     optimization: {
       minimize: true,
-        minimizer: [new TerserPlugin({
+      minimizer: [
+        new TerserPlugin({
           parallel: true,
           terserOptions: {
             ecma: 5,
@@ -115,8 +132,9 @@ module.exports = async (env, options) => {
               beautify: false
             }
           }
-        })]
-    },
+        })
+      ]
+    }
   };
 
   return config;

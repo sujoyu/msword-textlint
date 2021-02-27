@@ -18,4 +18,13 @@ object-assign
  * @license  MIT
  */
 
+/**
+ * MIT © 2017 azu
+ * Original
+ * @author Kenichiro Murata
+ * @copyright 2015 Kenichiro Murata
+ * @license MIT
+ * @fileoverview Japanese (natural language) parser.
+ */
+
 /** @license zlib.js 2012 - imaya [ https://github.com/imaya/zlib.js ] The MIT License */
